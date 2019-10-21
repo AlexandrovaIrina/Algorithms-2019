@@ -1,7 +1,6 @@
 @file:Suppress("UNUSED_PARAMETER")
 
 package lesson1
-
 /**
  * Сортировка времён
  *
@@ -130,7 +129,31 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  */
 fun sortSequence(inputName: String, outputName: String) {
-    TODO()
+    val input = File(inputName).readLines()
+    val nums = mutableMapOf<String, Int>()
+    var commonNum = ""
+    var count = 0
+    for (i in input) {
+        var last = nums[i] ?: 0
+        last ++
+        nums[i] = last
+        if (last > count || last == count && commonNum > i) {
+            count = last
+            commonNum = i
+        }
+    }
+    val writer = File(outputName).bufferedWriter()
+    for (i in input) {
+        if (i != commonNum) {
+            writer.write(i)
+            writer.newLine()
+        }
+    }
+    for (i in 0 until count) {
+        writer.write(commonNum)
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**
@@ -148,6 +171,25 @@ fun sortSequence(inputName: String, outputName: String) {
  * Результат: second = [1 3 4 9 9 13 15 20 23 28]
  */
 fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
-    TODO()
+    var firstIt = 0
+    var secondIt = first.size
+    var current = 0
+    while (firstIt < first.size && secondIt < second.size) {
+        if (first[firstIt] <= second[secondIt]!!) {
+            second[current] = first[firstIt]
+            firstIt ++
+        }
+        else {
+            second[current] = second[secondIt]
+            secondIt ++
+        }
+        current ++
+    }
+    if (firstIt < first.size) {
+        for (i in current until second.size) {
+            second[i] = first[firstIt]
+            firstIt ++
+        }
+    }
 }
 
