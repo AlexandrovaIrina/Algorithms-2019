@@ -1,6 +1,9 @@
 @file:Suppress("UNUSED_PARAMETER")
 
 package lesson1
+
+import java.io.File
+
 /**
  * Сортировка времён
  *
@@ -128,6 +131,9 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  * 2
  */
+/* Оценка алгоритма:
+* время работы - О(n)
+* ресурсозатратность - О(n)*/
 fun sortSequence(inputName: String, outputName: String) {
     val input = File(inputName).readLines()
     val nums = mutableMapOf<String, Int>()
@@ -170,6 +176,10 @@ fun sortSequence(inputName: String, outputName: String) {
  *
  * Результат: second = [1 3 4 9 9 13 15 20 23 28]
  */
+/* Оценка алгоритма:
+ * время работы алгоритма - О(second.size)
+ * ресурсозатратность - О(1)
+*/
 fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
     var firstIt = 0
     var secondIt = first.size

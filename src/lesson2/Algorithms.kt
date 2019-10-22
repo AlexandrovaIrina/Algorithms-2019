@@ -2,6 +2,8 @@
 
 package lesson2
 
+import java.lang.Math.sqrt
+import java.util.*
 /**
  * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
  * Простая
@@ -79,8 +81,31 @@ fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
  * Общий комментарий: решение из Википедии для этой задачи принимается,
  * но приветствуется попытка решить её самостоятельно.
  */
+/* Оцена алгоритма:
+* время работы - О(menNumber^2)
+* ресурсозатратность - О(menNumber)
+* */
 fun josephTask(menNumber: Int, choiceInterval: Int): Int {
-    TODO()
+    val erase = MutableList(menNumber, {true})
+    var i = 0
+    var flag = 0
+    while (flag <= menNumber) {
+        var count = 1
+        while (!erase[i]) {
+            i++
+            i %= menNumber
+        }
+        while (count <= choiceInterval) {
+            if (erase[i]) count++
+            i++
+            i %= menNumber
+        }
+        erase[i] = false
+        flag ++
+        i ++
+        i %= menNumber
+    }
+    return i + 1
 }
 
 /**
@@ -94,8 +119,40 @@ fun josephTask(menNumber: Int, choiceInterval: Int): Int {
  * Если имеется несколько самых длинных общих подстрок одной длины,
  * вернуть ту из них, которая встречается раньше в строке first.
  */
+/* Оценка алгоритма
+* время работы - О(first.length * second.length)
+* ресурсозатратность -  O(first.Length * second.length)*/
 fun longestCommonSubstring(first: String, second: String): String {
-    TODO()
+    val fstLen = first.length
+    val sndLen = second.length
+    val list = List(fstLen, { MutableList(sndLen, { 0 }) })
+    var max = 0
+    for (i in 0 until fstLen) {
+        for (j in 0 until sndLen) {
+            if (first[i] == second[j])
+                if (i == 0 || j == 0) list[i][j] = 1
+                else list[i][j] = list[i - 1][j - 1] + 1
+            if (max < list[i][j]) max = list[i][j]
+        }
+    }
+    var ans = StringBuilder()
+    var i = 0
+    var j = 0
+    while (i < fstLen && list[i][j] != max) {
+        while (j < sndLen && list[i][j] != max) {
+            j++
+        }
+        if (j == sndLen) {
+            j = 0
+            i++
+        }
+    }
+    while (i >= 0 && j >= 0 && list[i][j] != 0) {
+        ans.insert(0, first[i])
+        i--
+        j--
+    }
+    return ans.toString()
 }
 
 /**
