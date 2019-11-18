@@ -12,6 +12,8 @@ class TaskTestsJava : AbstractTaskTests() {
         sortTimes { inputName, outputName -> JavaTasks.sortTimes(inputName, outputName) }
     }
 
+    annotation class Tag(val : String)
+
     @Test
     @Tag("Normal")
     fun testSortAddresses() {

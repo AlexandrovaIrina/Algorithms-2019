@@ -35,7 +35,7 @@ import java.io.File
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
 fun sortTimes(inputName: String, outputName: String) {
-    TODO()
+
 }
 
 /**
@@ -65,7 +65,6 @@ fun sortTimes(inputName: String, outputName: String) {
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
 fun sortAddresses(inputName: String, outputName: String) {
-    TODO()
 }
 
 /**
@@ -99,7 +98,7 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 121.3
  */
 fun sortTemperatures(inputName: String, outputName: String) {
-    TODO()
+
 }
 
 /**
@@ -135,7 +134,7 @@ fun sortTemperatures(inputName: String, outputName: String) {
 * время работы - О(n)
 * ресурсозатратность - О(n)*/
 fun sortSequence(inputName: String, outputName: String) {
-    val input = File(inputName).readLines()
+    /*val input = File(inputName).readLines()
     val nums = mutableMapOf<String, Int>()
     var commonNum = ""
     var count = 0
@@ -159,7 +158,7 @@ fun sortSequence(inputName: String, outputName: String) {
         writer.write(commonNum)
         writer.newLine()
     }
-    writer.close()
+    writer.close()*/
 }
 
 /**
@@ -181,7 +180,7 @@ fun sortSequence(inputName: String, outputName: String) {
  * ресурсозатратность - О(1)
 */
 fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
-    var firstIt = 0
+    /*var firstIt = 0
     var secondIt = first.size
     var current = 0
     while (firstIt < first.size && secondIt < second.size) {
@@ -200,6 +199,6 @@ fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
             second[i] = first[firstIt]
             firstIt ++
         }
-    }
+    }*/
 }
 
