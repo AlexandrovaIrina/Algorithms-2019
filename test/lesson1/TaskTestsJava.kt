@@ -1,8 +1,7 @@
 package lesson1
 
 import org.junit.Test
-//import org.junit.jupiter.api.Tag
-//import kotlin.test.Test
+import org.junit.jupiter.api.Tag
 
 class TaskTestsJava : AbstractTaskTests() {
 
@@ -11,8 +10,6 @@ class TaskTestsJava : AbstractTaskTests() {
     fun testSortTimes() {
         sortTimes { inputName, outputName -> JavaTasks.sortTimes(inputName, outputName) }
     }
-
-    annotation class Tag(val : String)
 
     @Test
     @Tag("Normal")
