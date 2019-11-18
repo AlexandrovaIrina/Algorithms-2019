@@ -221,22 +221,28 @@ class KtBinaryTree<T : Comparable<T>>(
      * Найти множество всех элементов в диапазоне [fromElement, toElement)
      * Очень сложная
      */
-    override fun subSet(fromElement: T, toElement: T): SortedSet<T> =
-        KtBinaryTree(initialValue = this, from = fromElement, to = toElement)
+    override fun subSet(fromElement: T, toElement: T): SortedSet<T> {
+        if (toElement < this.first()) throw IllegalArgumentException()
+        return KtBinaryTree(initialValue = this, from = fromElement, to = toElement)
+    }
 
     /**
-     * Найти множество всех элементов меньше заданного
-     * Сложная
-     */
-    override fun headSet(toElement: T): SortedSet<T> =
-        KtBinaryTree(initialValue = this, to = toElement)
+    * Найти множество всех элементов меньше заданного
+    * Сложная
+    */
+    override fun headSet(toElement: T): SortedSet<T> {
+        if (toElement < first()) throw IllegalArgumentException()
+        return KtBinaryTree(initialValue = this, to = toElement)
+    }
 
     /**
-     * Найти множество всех элементов больше или равных заданного
-     * Сложная
-     */
-    override fun tailSet(fromElement: T): SortedSet<T> =
-        KtBinaryTree(initialValue = this, from = fromElement)
+    * Найти множество всех элементов больше или равных заданного
+    * Сложная
+    */
+    override fun tailSet(fromElement: T): SortedSet<T> {
+        if (fromElement > last()) throw IllegalArgumentException()
+        return KtBinaryTree(initialValue = this, from = fromElement)
+    }
 
     override fun first(): T {
         var current: Node<T> = root ?: throw NoSuchElementException()
