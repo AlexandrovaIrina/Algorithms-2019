@@ -5,7 +5,11 @@ import kotlin.NoSuchElementException
 import kotlin.math.max
 
 // Attention: comparable supported but comparator is not
-class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSortedSet<T> {
+class KtBinaryTree<T : Comparable<T>>(
+    private val initialValue: CheckableSortedSet<T>? = null,
+    private val from: T? = null,
+    private val to: T? = null
+): AbstractMutableSet<T>(), CheckableSortedSet<T> {
 
     private var root: Node<T>? = null
 
@@ -17,6 +21,21 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         var left: Node<T>? = null
 
         var right: Node<T>? = null
+    }
+
+    init {
+        initialValue?.forEach {
+            if (from != null && to != null) {
+                if (it >= from && it < to)
+                    add(it)
+            } else if (from != null) {
+                if (it >= from)
+                    add(it)
+            } else if (to != null) {
+                if (it < to)
+                    add(it)
+            }
+        }
     }
 
     override fun add(element: T): Boolean {
@@ -198,52 +217,26 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
 
     override fun comparator(): Comparator<in T>? = null
 
-    private fun getAllSuccessorsWithConditions(
-        from: T? = null,
-        to: T? = null,
-        set: MutableSet<T> = mutableSetOf(),
-        start: Node<T>? = root
-    ): Set<T> {
-        if (start == null) return set
-
-        val temp: MutableSet<T> = set
-
-        if (start.left != null) temp += getAllSuccessorsWithConditions(from, to, temp, start.left)
-        if (start.right != null) temp += getAllSuccessorsWithConditions(from, to, temp, start.right)
-
-        if (from != null && to != null) {
-            if (start.value >= from && start.value <= to)
-                temp += start.value
-        } else if (from != null) {
-            if (start.value >= from)
-                temp += start.value
-        } else if (to != null) {
-            if (start.value <= to)
-                temp += start.value
-        }
-        return temp
-    }
-
     /**
      * Найти множество всех элементов в диапазоне [fromElement, toElement)
      * Очень сложная
      */
     override fun subSet(fromElement: T, toElement: T): SortedSet<T> =
-        getAllSuccessorsWithConditions(fromElement, toElement).toSortedSet()
+        KtBinaryTree(initialValue = this, from = fromElement, to = toElement)
 
     /**
      * Найти множество всех элементов меньше заданного
      * Сложная
      */
     override fun headSet(toElement: T): SortedSet<T> =
-        getAllSuccessorsWithConditions(null, toElement).toSortedSet()
+        KtBinaryTree(initialValue = this, to = toElement)
 
     /**
      * Найти множество всех элементов больше или равных заданного
      * Сложная
      */
     override fun tailSet(fromElement: T): SortedSet<T> =
-        getAllSuccessorsWithConditions(fromElement, null).toSortedSet()
+        KtBinaryTree(initialValue = this, from = fromElement)
 
     override fun first(): T {
         var current: Node<T> = root ?: throw NoSuchElementException()
