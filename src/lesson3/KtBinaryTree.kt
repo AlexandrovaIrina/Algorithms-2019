@@ -39,6 +39,7 @@ class KtBinaryTree<T : Comparable<T>>(
     }
 
     override fun add(element: T): Boolean {
+        println("new $element")
         val closest = find(element)
         val comparison = if (closest == null) -1 else element.compareTo(closest.value)
         if (comparison == 0) {
@@ -85,34 +86,22 @@ class KtBinaryTree<T : Comparable<T>>(
         val removable = find(element) ?: return false
         val parent = removable.parent
 
-        if (parent == null) {
-            root = null
-            size--
-            return true
-        }
-
-        // случай 1: нет потомков
-        if (removable.left == null && removable.right == null) {
-            if (parent.left?.value == element)
-                parent.left = null
-            else
-                parent.right = null
-        }
-        // случай 2: есть 1 потомок
-        else if (removable.left == null || removable.right == null) {
+        if (removable.left == null || removable.right == null) {
             val successor = if (removable.left != null) removable.left else removable.right
-            if (parent.left?.value == element)
-                parent.left = successor
-            else
-                parent.right = successor
+            when {
+                parent == null -> root = successor
+                parent.left?.value == element -> parent.left = successor
+                else -> parent.right = successor
+            }
         }
-        // третий случай: удаляемый элемент имеет двух потомков
+        //удаляемый элемент имеет двух потомков
         else {
             if (removable.right!!.left == null) {
-                if (parent.left?.value == element)
-                    parent.left = removable.right
-                else
-                    parent.right = removable.right
+                when {
+                    parent == null -> root = removable.right
+                    parent.left?.value == element -> parent.left = removable.right
+                    else -> parent.right = removable.right
+                }
                 removable.right!!.left = removable.left
             } else {
                 val replaceable = findNext(removable.value)!!
@@ -171,22 +160,21 @@ class KtBinaryTree<T : Comparable<T>>(
         return next
     }
 
-    private fun getAllSuccessorElements(set: MutableSet<T> = mutableSetOf(), start: Node<T>? = root): Set<T> {
-        if (start == null) return set
-
-        val temp: MutableSet<T> = set
-
-        if (start.left != null) temp += getAllSuccessorElements(temp, start.left)
-        if (start.right != null) temp += getAllSuccessorElements(temp, start.right)
-        temp += start.value
-
-        return temp
-    }
     inner class BinaryTreeIterator internal constructor() : MutableIterator<T> {
-        private lateinit var current: T
+        private val stack = Stack<Node<T>>()
+        private var current: Node<T>? = null
 
-        private val stack = ArrayDeque<T>().apply {
-            addAll(getAllSuccessorElements().toSortedSet())
+        init {
+            addPathToMin(root)
+            if (stack.isNotEmpty())
+                current = stack.peek()
+        }
+
+
+        private fun addPathToMin(start: Node<T>?) {
+            if (start == null) return
+            stack.push(start)
+            addPathToMin(start.left)
         }
 
         /**
@@ -200,8 +188,10 @@ class KtBinaryTree<T : Comparable<T>>(
          * Средняя
          */
         override fun next(): T {
+            if (stack.isEmpty()) throw NoSuchElementException()
             current = stack.pop()
-            return current
+            addPathToMin(current?.right)
+            return current!!.value
         }
 
         /**
@@ -209,7 +199,7 @@ class KtBinaryTree<T : Comparable<T>>(
          * Сложная
          */
         override fun remove() {
-            remove(current)
+            remove(current?.value)
         }
     }
 
@@ -227,18 +217,18 @@ class KtBinaryTree<T : Comparable<T>>(
     }
 
     /**
-    * Найти множество всех элементов меньше заданного
-    * Сложная
-    */
+     * Найти множество всех элементов меньше заданного
+     * Сложная
+     */
     override fun headSet(toElement: T): SortedSet<T> {
         if (toElement < first()) throw IllegalArgumentException()
         return KtBinaryTree(initialValue = this, to = toElement)
     }
 
     /**
-    * Найти множество всех элементов больше или равных заданного
-    * Сложная
-    */
+     * Найти множество всех элементов больше или равных заданного
+     * Сложная
+     */
     override fun tailSet(fromElement: T): SortedSet<T> {
         if (fromElement > last()) throw IllegalArgumentException()
         return KtBinaryTree(initialValue = this, from = fromElement)
