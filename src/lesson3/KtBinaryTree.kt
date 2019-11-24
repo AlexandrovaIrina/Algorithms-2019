@@ -6,7 +6,7 @@ import kotlin.math.max
 
 // Attention: comparable supported but comparator is not
 class KtBinaryTree<T : Comparable<T>>(
-    private val initialValue: CheckableSortedSet<T>? = null,
+    private val delegate: CheckableSortedSet<T>? = null,
     private val from: T? = null,
     private val to: T? = null
 ): AbstractMutableSet<T>(), CheckableSortedSet<T> {
@@ -24,7 +24,7 @@ class KtBinaryTree<T : Comparable<T>>(
     }
 
     init {
-        initialValue?.forEach {
+        delegate?.forEach {
             if (from != null && to != null) {
                 if (it >= from && it < to)
                     add(it)
@@ -39,7 +39,6 @@ class KtBinaryTree<T : Comparable<T>>(
     }
 
     override fun add(element: T): Boolean {
-        println("new $element")
         val closest = find(element)
         val comparison = if (closest == null) -1 else element.compareTo(closest.value)
         if (comparison == 0) {
@@ -213,7 +212,7 @@ class KtBinaryTree<T : Comparable<T>>(
      */
     override fun subSet(fromElement: T, toElement: T): SortedSet<T> {
         if (toElement < this.first()) throw IllegalArgumentException()
-        return KtBinaryTree(initialValue = this, from = fromElement, to = toElement)
+        return SubBinaryTreeSet(this, fromElement, toElement)
     }
 
     /**
@@ -222,7 +221,7 @@ class KtBinaryTree<T : Comparable<T>>(
      */
     override fun headSet(toElement: T): SortedSet<T> {
         if (toElement < first()) throw IllegalArgumentException()
-        return KtBinaryTree(initialValue = this, to = toElement)
+        return SubBinaryTreeSet(this, null, toElement)
     }
 
     /**
@@ -231,7 +230,7 @@ class KtBinaryTree<T : Comparable<T>>(
      */
     override fun tailSet(fromElement: T): SortedSet<T> {
         if (fromElement > last()) throw IllegalArgumentException()
-        return KtBinaryTree(initialValue = this, from = fromElement)
+        return SubBinaryTreeSet(this, fromElement, null)
     }
 
     override fun first(): T {
