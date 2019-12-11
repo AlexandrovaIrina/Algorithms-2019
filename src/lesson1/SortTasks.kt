@@ -135,13 +135,13 @@ fun sortTemperatures(inputName: String, outputName: String) {
 * ресурсозатратность - О(n)*/
 fun sortSequence(inputName: String, outputName: String) {
     /*val input = File(inputName).readLines()
-    val nums = mutableMapOf<String, Int>()
+    val numbers = mutableMapOf<String, Int>()
     var commonNum = ""
     var count = 0
     for (i in input) {
-        var last = nums[i] ?: 0
+        var last = numbers[i] ?: 0
         last ++
-        nums[i] = last
+        numbers[i] = last
         if (last > count || last == count && commonNum > i) {
             count = last
             commonNum = i

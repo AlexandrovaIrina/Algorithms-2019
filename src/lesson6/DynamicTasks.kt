@@ -2,6 +2,8 @@
 
 package lesson6
 
+import java.io.File
+
 /**
  * Наибольшая общая подпоследовательность.
  * Средняя
@@ -53,10 +55,14 @@ fun longestIncreasingSubSequence(list: List<Int>): List<Int> {
  * Необходимо найти маршрут с минимальным весом и вернуть этот минимальный вес.
  *
  * Здесь ответ 2 + 3 + 4 + 1 + 2 = 12
- */
-fun shortestPathOnField(inputName: String): Int {
-    TODO()
-}
 
+fun shortestPathOnField(inputName: String): Int {
+    val field = listOf(listOf<Int>())
+    for (line in File(inputName).readLines()) {
+        field += line.
+
+    }
+}
+*/
 // Задачу "Максимальное независимое множество вершин в графе без циклов"
 // смотрите в уроке 5

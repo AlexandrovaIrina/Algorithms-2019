@@ -2,6 +2,9 @@
 
 package lesson5
 
+import lesson5.impl.GraphBuilder
+import java.util.*
+
 /**
  * Эйлеров цикл.
  * Средняя
@@ -28,8 +31,41 @@ package lesson5
  * Справка: Эйлеров цикл -- это цикл, проходящий через все рёбра
  * связного графа ровно по одному разу
  */
+// Оценка алгоритма:
+// время работы - О(N)
+// ресурсоемкость - О(N)
+// N - количество вершин
+fun Graph.isEulerGraph (): Boolean {
+    for (vertex in vertices) {
+        if(getNeighbors(vertex).size % 2 != 0) return false
+    }
+    return true
+}
 fun Graph.findEulerLoop(): List<Graph.Edge> {
-    TODO()
+    if (vertices.isEmpty() || !isEulerGraph()) return emptyList()
+    var answer = mutableListOf<Graph.Edge>()
+    var curAnswer = Stack<Graph.Vertex>()
+    curAnswer.push(vertices.first())
+    val edges = this.edges
+    while (curAnswer.isNotEmpty()) {
+        val currentVertex = curAnswer.peek()
+        for (vertex in vertices) {
+            val edge = getConnection(currentVertex, vertex) ?: continue
+            if (edges.contains(edge)){
+                curAnswer.push(vertex)
+                edges.remove(edge)
+                break
+            }
+        }
+
+        if (currentVertex == curAnswer.peek()){
+            curAnswer.pop()
+            if (curAnswer.isNotEmpty()){
+                answer.add(getConnection(currentVertex, curAnswer.peek())!!)
+            }
+        }
+    }
+    return answer
 }
 
 /**
@@ -60,8 +96,23 @@ fun Graph.findEulerLoop(): List<Graph.Edge> {
  * |
  * J ------------ K
  */
+// Оценка алгоритма
+// время работы - О(n*m)
+// ресусоемкость - O(n)
+// n - количество вершин
+// m - количество ребер
 fun Graph.minimumSpanningTree(): Graph {
-    TODO()
+    if (vertices.isEmpty()) return GraphBuilder().build()
+    var answer = GraphBuilder()
+    val begin = vertices.first()
+    for (vertex in vertices) {
+        answer.addVertex(vertex.name)
+    }
+    val shortestPaths = shortestPath(begin)
+    for ((k, v) in shortestPaths){
+        if (v.prev != null) answer.addConnection(v.prev, k, 1)
+    }
+    return answer.build()
 }
 
 /**

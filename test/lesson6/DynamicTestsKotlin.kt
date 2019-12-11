@@ -16,10 +16,11 @@ class DynamicTestsKotlin : AbstractDynamicTests() {
     fun testLongestIncreasingSubSequence() {
         longestIncreasingSubSequence { longestIncreasingSubSequence(it) }
     }
-
+/*
     @Test
     @Tag("Normal")
     fun testShortestPathOnField() {
         shortestPathOnField { shortestPathOnField(it) }
     }
+*/
 }
