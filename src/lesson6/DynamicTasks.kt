@@ -2,7 +2,8 @@
 
 package lesson6
 
-import java.io.File
+import java.lang.Math.*
+
 
 /**
  * Наибольшая общая подпоследовательность.
@@ -16,8 +17,42 @@ import java.io.File
  * Если есть несколько самых длинных общих подпоследовательностей, вернуть любую из них.
  * При сравнении подстрок, регистр символов *имеет* значение.
  */
+// Оценка алгоритма
+// время работы - О(n * m)
+// ресурсоемкость - O(n * m)
+// n - длина первой строки
+// m - длина второй строки
 fun longestCommonSubSequence(first: String, second: String): String {
-    TODO()
+
+    val firstLength = first.length
+    val secondLength = second.length
+    var subLength = Array ( firstLength + 1) { Array (secondLength + 1) {0} }
+
+    for (i in 0 until firstLength) {
+        for (j in 0 until secondLength) {
+            if (first[i] == second[j])
+                subLength[i + 1][j + 1] = subLength[i][j] + 1
+            else
+                subLength[i + 1][j + 1] = max(subLength[i + 1][j], subLength[i][j + 1])
+        }
+    }
+
+    var answer = StringBuilder (max (firstLength, secondLength))
+    var itFirst = firstLength
+    var itSecond = secondLength
+
+    while (itFirst > 0 && itSecond > 0) {
+        if (first[itFirst - 1] == second[itSecond - 1]) {
+            answer.append(first[itFirst - 1])
+            itFirst --
+            itSecond --
+        }
+        else if (subLength[itFirst - 1][itSecond] > subLength[itFirst][itSecond - 1])
+            itFirst --
+        else
+            itSecond --
+    }
+    return answer.reverse().toString()
 }
 
 /**
@@ -33,7 +68,45 @@ fun longestCommonSubSequence(first: String, second: String): String {
  * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
  */
 fun longestIncreasingSubSequence(list: List<Int>): List<Int> {
-    TODO()
+    val size = list.size
+    if (list.isEmpty() || size == 1) return list
+    var longestSeq = Array(size) {0}
+    var indexes = Array(size) {0}
+
+    for (i in 0 until size) {
+        longestSeq[i] = 1
+        indexes[i] = -1
+        for (j in 0 until i) {
+            if (list[j] < list[i] && longestSeq[j] + 1 > longestSeq[i]) {
+                longestSeq[i] = longestSeq[j] + 1
+                indexes[i] = j
+            }
+        }
+    }
+
+    var maxLength = longestSeq[0]
+    var pos = 0
+
+    for (i in 0 until size) {
+        if (longestSeq[i] > maxLength){
+            maxLength = longestSeq[i]
+            pos = i
+        }
+    }
+
+    var order = Array (maxLength) {0}
+    var len = 0
+
+    while (pos != -1) {
+        order[len] = pos
+        pos = indexes[pos]
+        len ++
+    }
+    var result = listOf <Int> ()
+    for (i in order.size - 1 downTo 0){
+        result += list[order[i]]
+    }
+    return result
 }
 
 /**
@@ -56,13 +129,10 @@ fun longestIncreasingSubSequence(list: List<Int>): List<Int> {
  *
  * Здесь ответ 2 + 3 + 4 + 1 + 2 = 12
 
-fun shortestPathOnField(inputName: String): Int {
-    val field = listOf(listOf<Int>())
-    for (line in File(inputName).readLines()) {
-        field += line.
-
-    }
-}
 */
+fun shortestPathOnField(inputName: String): Int {
+    TODO()
+}
+
 // Задачу "Максимальное независимое множество вершин в графе без циклов"
 // смотрите в уроке 5
